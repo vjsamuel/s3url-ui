@@ -1,6 +1,6 @@
 FROM golang:latest
 EXPOSE 8080
-CHDIR /
+WORKDIR /
 ENTRYPOINT ["/s3url-ui"]
 COPY ./bin/ /
 COPY ./webapp /webapp
