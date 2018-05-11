@@ -127,7 +127,7 @@
                 </fieldset>
               </form>
                 <!-- ###Connecting to the API using JQuery/Ajax -->
-                <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
                 <script>
                     (function($){
                      function processForm( e ){
@@ -144,7 +144,7 @@
                             data: '{"oURL":"'+$(this).serializeArray()[0].value+'"}',
                             //everything is fine
                             success: function( data, textStatus, jQxhr ){
-                            var shortURL = "http://s3url.xyz/"+data['sURL'];
+                            var shortURL = location.protocol + '//' + location.host + "/go/" + data['sURL'];
                             $('#response p').html('Short URL: </br><input readonly="true" type="text" value='+shortURL+'></input>')},
                             //an error occured
                             error: function( jqXhr, textStatus, errorThrown ){
