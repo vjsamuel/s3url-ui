@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>My Account</title>
+        <meta charset="utf-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+                    <link href="layout/styles/layout.css" rel="stylesheet" type="text/css" media="all">
+                        <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
+                            <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+                                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+                                    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+                                        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+                                        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+                                        <script src="https://sdk.amazonaws.com/js/aws-sdk-2.230.1.min.js"></script>
+                                        <script src="js/lib/aws-cognito-sdk.min.js"></script>
+                                        <script src="js/lib/amazon-cognito-identity.min.js"></script>
+                                        <script src="https://apis.google.com/js/platform.js" async defer></script>
+                                        <meta name="google-signin-client_id" content="642273503260-4l3qkb0s2m4roaanl2ka28n8umilheg1.apps.googleusercontent.com">
+                                            <link rel="stylesheet" type="text/css" href="css/main.css">
+                                                <script type="text/javascript" src="js/index.js"></script>
+                                                </head>
+    <body id="home">
+        <!-- ################################################################################################ -->
+        <!-- Top Background Image Wrapper -->
+        <nav class="navbar navbar-default navbar-expand-lg navbar-light navbar-fixed-top">
+           <div class="navbar-header d-flex col">
+            <a class="navbar-brand" href="#">S3<b>URL</b></a>
+          </div>
+           <ul class="nav navbar-nav navbar-right">
+            <li><a href="index.html"><span class="glyphicon glyphicon-log-out"></span> Back</a></li>
+          </ul>
+        </nav>
+       <!-- ################################################################################################ -->
+        <!-- ################################################################################################ -->
+        <div class="g-signin2 pull-left" data-onsuccess="onSignInSuccess" data-onfailure="onSignInFailure"></div>
+        <div class="bgded row4 overlay">
+            <div id="pageintro" class="hoc clear myurl">
+                <!-- ################################################################################################ -->
+                <div class="wrapper row3">
+                    <main class="hoc container clear">
+                        <!-- main body -->
+                        <!-- ################################################################################################ -->
+                        <div class="content">
+                            <!-- ################################################################################################ -->
+                            <h1>My URLs</h1>
+                            <table name='drg_table'>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                            <div class="scrollable">
+
+                                <table id="tableContainer">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Original URL</th>
+                                            <th>Short URL</th>
+                                            <th>Share</th>
+                                            <th>Delete</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="urlsToShow">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+                            <script>
+                                window.onload = function(){
+                                                  tok = getAccessToken()
+                                                  if (tok == "") {
+                                                    return;
+                                                  }
+                                                  $.ajax({
+                                                         url: 'https://api.s3url.vjsamuel.me/api/v1/urls',
+                                                         dataType: "json",
+                                                         headers: {"Authorization": tok},
+                                                         type: 'get',
+                                                         contentType: 'application/json',
+
+                                                         success: function( data, textStatus, jQxhr ){
+                                                         var trHTML = '';
+                                                         $.each(data, function (i, o){
+                                                                var surl = location.protocol + '//' + location.host + "/go/" + o.sURL
+                                                                text = encodeURI("Hello, check out my shortened url " + surl)
+                                                                trHTML +=  '<tr><td class="groupID">' + o.sURL +
+                                                                '</td>'+'<td id="'+o.id+'"><a target="_blank" href="'+o.oURL+'">'+o.oURL+'</a>' +
+                                                                '</td><td><a target="_blank" href="'+surl+'">' + surl +'</a>'+
+                                                                '</td><td><a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=' + text + '" data-size="large"> Tweet</a>'+
+                                                                '</td><td id="'+o.id+'"><input type="button" class="delete" value="Delete" id="deleteRow">'+
+                                                                '</td></tr>'
+                                                                ;
+                                                                });
+                                                         $('#urlsToShow').html(trHTML)
+                                                         }
+                                                         ,
+                                                         //an error occured
+                                                         error: function( jqXhr, textStatus, errorThrown ){
+                                                         $('#response p').html('An error has occured; Please contact the admin!');
+                                                         console.log( errorThrown );
+                                                         }
+                                                         });
+
+                                                  };
+
+                                                  $("#tableContainer").on("click", ".delete", function () {
+                                                                          var button = $(this),
+                                                                          tr = button.closest('tr');
+                                                                          // find the ID stored in the .groupId cell
+                                                                          var id = tr.find('td.groupID').text();
+                                                                          console.log('clicked button with id', id);
+                                                                          //alert(id);
+                                                                          // ask confirmation
+                                                                          if (confirm('Are you sure you want to delete this entry?')) {
+                                                                          tok = getAccessToken()
+                                                                          if (tok == "") {
+                                                                            return;
+                                                                          }
+                                                                          $.ajax({
+                                                                                 url: 'https://api.s3url.vjsamuel.me/api/v1/url/'+id,
+                                                                                 //dataType: "json",
+                                                                                 headers: {"Authorization": tok},
+                                                                                 type: 'delete',
+                                                                                 success: function( data, textStatus, jQxhr ){
+                                                                                 //  $('#urlsToShow p').html('AAAAA'+JSON.stringify(data))
+                                                                                 }
+                                                                                 ,
+                                                                                 //an error occured
+                                                                                 error: function( jqXhr, textStatus, errorThrown ){
+                                                                                 $('#response p').html('An error has occured; Please contact the admin!');
+                                                                                 console.log( errorThrown );
+                                                                                 }
+                                                                                 });
+                                                                          tr.remove();
+                                                                          }
+                                                                          });
+                                </script>
+
+                            <!-- ################################################################################################ -->
+                        </div>
+                    </main>
+                        <!-- ################################################################################################ -->
+                </div>
+            </div>
+                <!-- End Top Background Image Wrapper -->
+                <!-- ################################################################################################ -->
+
+                <!-- ################################################################################################ -->
+                <!-- ################################################################################################ -->
+                <div class="wrapper row5">
+                    <div id="copyright" class="hoc clear">
+                        <!-- ################################################################################################ -->
+                        <p class="fl_left">Copyright &copy; 2018 - All Rights Reserved - <a href="#">s3u.rl</a></p>    <!-- ############################################################################################### -->
+                    </div>
+                </div>
+                <!-- ################################################################################################ -->
+                <!-- ################################################################################################ -->
+                <!-- ################################################################################################ -->
+                <a id="backtotop" href="#home"><i class="fa fa-chevron-up"></i></a>
+                <!-- JAVASCRIPTS -->
+                <script src="layout/scripts/jquery.min.js"></script>
+                <script src="layout/scripts/jquery.backtotop.js"></script>
+                <script src="layout/scripts/jquery.mobilemenu.js"></script>
+                <script src="layout/scripts/jquery.flexslider-min.js"></script>
+                <script src="layout/scripts/scripts.js"></script>
+                <script src="layout/scripts/scripts.js"></script>
+                </body>
+</html>

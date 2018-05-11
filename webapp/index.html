@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>S3URL</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link href="layout/styles/layout.css" rel="stylesheet" type="text/css" media="all">
+<link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://sdk.amazonaws.com/js/aws-sdk-2.230.1.min.js"></script>
+<script src="js/lib/aws-cognito-sdk.min.js"></script>
+<script src="js/lib/amazon-cognito-identity.min.js"></script>
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+<meta name="google-signin-client_id" content="account">
+<link rel="stylesheet" type="text/css" href="css/main.css">
+<meta name="google-signin-client_id" content="642273503260-4l3qkb0s2m4roaanl2ka28n8umilheg1.apps.googleusercontent.com">
+
+<script type="text/javascript" src="js/index.js"></script>
+</head>
+<body id="home">
+<!-- ################################################################################################ -->
+<!-- Top Background Image Wrapper -->
+        <nav class="navbar navbar-default navbar-expand-lg navbar-light navbar-fixed-top">
+          <div class="navbar-header d-flex col">
+            <a class="navbar-brand" href="#">S3<b>URL</b></a>
+          </div>
+          <!-- Collection of nav links, forms, and other content for toggling -->
+          <div id="navbarCollapse" class="collapse navbar-collapse justify-content-start">
+            <ul class="nav navbar-nav">
+              <li class="nav-item"><a href="#about" class="nav-link">About</a></li>
+              <li class="nav-item"><a href="#team" class="nav-link">Team</a></li>
+              <li class="nav-item" id="userdash"><a href="myaccount.html" class="nav-link" target="_blank">My URLs</a></li>
+              <li class="nav-item" id="devdash"><a href="developer.html" class="nav-link" target="_blank">Developer</a></li>
+              <li class="nav-item" id="logout"><a href="#" onclick="signoutUser()" class="nav-link">Sign out </a></li>
+              <li class="nav-item"><a href="#" id="uname" class="nav-link"></a></li>
+            </ul>
+        <ul class="nav navbar-nav navbar-right ml-auto" >
+          <li class="nav-item" id="loginBtn">
+              <a data-toggle="dropdown"  class="nav-link dropdown-toggle" href="#">Login</a>
+              <ul class="dropdown-menu form-wrapper">
+                <li>
+                  <form id="login-form" onsubmit="return validateForm();">
+                    <p class="hint-text">Sign in with your Social media account</p>
+                    <div class="form-group social-btn clearfix">
+                      <div class="g-signin2 pull-left" data-onsuccess="onSignInSuccess" data-onfailure="onSignInFailure"></div>
+                      <a href="#" class="btn btn-info pull-right"><i class="fa fa-facebook"></i> Facebook</a>
+                    </div>
+                    <div class="or-seperator"><b>or</b></div>
+                     <div class="form-group">
+                            <input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="Email" value="">
+                          </div>
+                          <div class="form-group">
+                            <input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Password">
+                          </div>
+                          <input type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-primary btn-block" value="Log In">
+
+                        <div class="form-footer">
+                          <a href="#">Forgot Your password?</a>
+                        </div>
+                    </form>
+                  </li>
+                </ul>
+              </li>
+              <li class="nav-item" id="signupBtn">
+               <a href="#" data-toggle="dropdown"  class="btn btn-primary dropdown-toggle get-started-btn mt-1 mb-1">Sign up</a>
+                <ul class="dropdown-menu form-wrapper">
+                  <li>
+                    <form id="register-form" onsubmit="return validateForm();">
+                      <p class="hint-text">Create your S3URL Account!</p>
+                    <div class="form-group">
+                            <input type="text" name="username" id="regusername" tabindex="1" class="form-control" placeholder="Username" value="">
+                          </div>
+                          <div class="form-group">
+                            <input type="email" name="email" id="regemail" tabindex="1" class="form-control" placeholder="Email Address" value="">
+                          </div>
+                          <div class="form-group">
+                            <input type="password" name="password" id="regpassword" tabindex="2" class="form-control" placeholder="Password">
+                          </div>
+                          <div class="form-group">
+                            <input type="password" name="confirm-password" id="confirm-password" tabindex="2" class="form-control" placeholder="Confirm Password">
+                          </div>
+                      <div class="form-group">
+                        <label class="checkbox-inline"><input type="checkbox" required="required"> I accept the <a href="#">Terms &amp; Conditions</a></label>
+                      </div>
+                      <input type="submit" name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-primary btn-block" value="Sign up">
+
+                    </form>
+                  </li>
+                </ul>
+             </li>
+            </ul>
+          </div>
+        </nav>
+  <!-- ################################################################################################ -->
+  <!-- ################################################################################################ -->
+  <div class="bgded row4 overlay">
+    <div id="pageintro" class="hoc clear">
+    <!-- ################################################################################################ -->
+    <div class="flexslider basicslider">
+      <ul class="slides">
+        <li>
+          <article>
+            <p></p>
+            <h3 class="heading">UNLEASH THE POWER OF THE LINK</h3>
+            <p>Brand, track and optimize every touch point with S3url, the interactive cloud based link management platform. </p>
+            <footer>
+                <form class="group" id="url-form">
+                <fieldset>
+                  <!-- <legend>URL:</legend> -->
+                  <input id="oURL" name="oURL" type="text" placeholder="Paste a link to shorten it&hellip;">
+                  <button class="fa fa-sign-in" type="submit" title="Submit"><em>Submit</em></button>
+                  <!-- ### This will be later be used in the script for showing the shortURL -->
+                  <div  id="response">
+                      <p></p>
+                  </div>
+                  <!-- ################################################################################################ -->
+                  <br/>
+                  <br/>
+                  <br/>
+                  <br/>
+
+                </fieldset>
+              </form>
+                <!-- ###Connecting to the API using JQuery/Ajax -->
+                <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+                <script>
+                    (function($){
+                     function processForm( e ){
+                     tok = getAccessToken()
+                     if (tok == "") {
+                        return;
+                     }
+                     $.ajax({
+                            url: 'https://api.s3url.vjsamuel.me/api/v1/url/shorten',
+                            dataType: "json",
+                            headers: {"Authorization": tok},
+                            type: 'post',
+                            contentType: 'application/json',
+                            data: '{"oURL":"'+$(this).serializeArray()[0].value+'"}',
+                            //everything is fine
+                            success: function( data, textStatus, jQxhr ){
+                            var shortURL = "http://s3url.xyz/"+data['sURL'];
+                            $('#response p').html('Short URL: </br><input readonly="true" type="text" value='+shortURL+'></input>')},
+                            //an error occured
+                            error: function( jqXhr, textStatus, errorThrown ){
+                            $('#response p').html('An error has occured; Please contact the admin!');
+                            console.log( errorThrown );
+                            }
+                            });
+
+                     e.preventDefault();
+                     }
+
+                     $('#url-form').submit( processForm );
+                     })(jQuery);
+                    </script>
+            </footer>
+          </article>
+        </li>
+        <li>
+          <article>
+            <h3 class="heading">HARNESS EVERY CLICK, TAP AND SWIPE!</h3>
+            <p>The link is the invisible thread that connects every customer interaction to tell a greater story. Drive seamless experiences across every channel and every device with S3URL Enterprise.</p>
+            <footer><a class="More statistics..." href="#about">Read more...</a></footer>
+          </article>
+        </li>
+        <li>
+          <article>
+            <p>S3URL</p>
+            <h3 class="heading">Shorten, Save and Share!</h3>
+            <p>The link puts you back in the driver’s seat.The link management platform helps you track and drive engagement where you want, when you want.The link is what makes a good customer experience great.</p>
+            <p>Do you want to know more about us?</p>
+            <footer><a class="btn" href="#about">About us...</a></footer>
+          </article>
+        </li>
+      </ul>
+    </div>
+    <!-- ################################################################################################ -->
+  </div>
+  <!-- ################################################################################################ -->
+</div>
+<!-- End Top Background Image Wrapper -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- <div class="wrapper row3">
+  <main class="hoc container clear"> -->
+    <!-- main body -->
+    <!-- ################################################################################################ -->
+    <!-- <div class="center btmspace-80">
+      <h3 class="heading">Data Analytics</h3>
+      <p class="nospace">...</p>
+    </div>
+    <ul class="nospace group center">
+      <li class="one_third first">
+        <article><a class="inverse" href="#"><i class="btmspace-30 icon fa fa-expand"></i></a>
+          <h6 class="heading font-x1">Chart 1 Title</h6>
+          <p>Chart 1 Here&hellip;</p>
+        </article>
+      </li>
+      <li class="one_third">
+        <article><a class="inverse" href="#"><i class="btmspace-30 icon fa fa-headphones"></i></a>
+          <h6 class="heading font-x1">Chart 2 Title</h6>
+          <p>Chart 2 Here&hellip;</p>
+        </article>
+      </li>
+      <li class="one_third">
+        <article><a class="inverse" href="#"><i class="btmspace-30 icon fa fa-history"></i></a>
+          <h6 class="heading font-x1">Chart 3 Title</h6>
+          <p>Chart 3 Here&hellip;</p>
+        </article>
+      </li>
+    </ul> -->
+    <!-- ################################################################################################ -->
+    <!-- / main body -->
+    <!-- <div class="clear"></div>
+  </main>
+</div> -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<div class="wrapper row2" id="about">
+  <article class="hoc container clear">
+    <!-- ################################################################################################ -->
+    <div class="one_quarter first">
+      <h3 class="heading font-x2"><img src="images/sjsu-logo.png" alt="San Jose State University"></h3>
+    </div>
+    <div class="three_quarter">
+      <p class="nospace btmspace-30">Cloud born interactive link management platform.<br>Developed by code monkeys - a team of five members.</p>
+      <ul class="nospace group stats">
+        <li><i class="fa fa-3x fa-user-secret"></i>
+          <p>Golnaz <br>Bidabadi</p>
+          <p><a href="https://github.com/gbidabadi/S3URL_FrontEnd">Read more...</a></p>
+        </li>
+        <li><i class="fa fa-3x fa-user-secret"></i>
+          <p>Harini <br>Balakrishnan</p>
+          <p><a href="https://github.com/HariniGB">Read more...</a></p>
+        </li>
+        <li><i class="fa fa-3x fa-user-secret"></i>
+          <p>Swetha <br>Chandrasekar </p>
+          <p><a href="https://github.com/swethac18/UrlShortnerCMPE282">Read more...</a></p>
+        </li>
+      </ul>
+    <div class="three_quarter">
+      <p class="nospace btmspace-30"></p>
+      <ul class="nospace group stats">
+        <li><i class="fa fa-3x fa-user-secret"></i>
+          <p>Vijay <br>Samuel </p>
+          <p><a href="https://github.com/vjsamuel/">Read more...</a></p>
+        </li>
+        <li><i class="fa fa-3x fa-user-secret"></i>
+          <p>Yamini Muralidharen</p>
+          <p><a href="https://github.com/YaminiMuralidharen/Cloudservices">Read more...</a></p>
+        </li>
+      </ul>
+    </div>
+    <!-- ################################################################################################ -->
+  </article>
+</div>
+<!-- ################################################################################################ -->
+<div class="wrapper coloured">
+  <article class="hoc cta clear">
+     <!-- ################################################################################################ -->
+    <h6 class="three_quarter first">If you are interested to see the source code... </h6>
+    <footer class="one_quarter"><a class="btn" href="https://github.com/S3URL/s3u.rl">Click here!&raquo;</a></footer>
+    </form>
+    </footer>
+    <!-- ################################################################################################ -->
+  </article>
+</div>
+ <!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<div class="wrapper row4 bgded" id="team">
+  <div class="hoc split clear">
+    <section>
+      <!-- ################################################################################################ -->
+      <h2 class="heading">How does it work?</h2>
+      <p class="btmspace-50">Copy paste heavy link and carry a short link with ease.</p>
+      <article><a href="#"><i class="icon fa fa-odnoklassniki"></i></a>
+        <h6 class="heading font-x1">Shorten</h6>
+        <p>Consistency is what makes a good brand great. Create short links that is easy to carry your branding across every device and channel.&hellip;</p>
+      </article>
+      <article><a href="#"><i class="icon fa fa-object-ungroup"></i></a>
+        <h6 class="heading font-x1">Save</h6>
+        <p>Maintain secured account with unlimited storage of your data in the public cloud.&hellip;</p>
+      </article>
+      <article><a href="#"><i class="icon fa fa-signing"></i></a>
+        <h6 class="heading font-x1">Share</h6>
+        <p>Sky is the limit. Expose your brand with pride to your friends and social communities.&hellip;</p>
+      </article>
+      <!-- ################################################################################################ -->
+    </section>
+  </div>
+</div>
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<div class="wrapper coloured">
+  <article class="hoc cta clear">
+    <!-- ################################################################################################ -->
+    <h6 class="three_quarter first">If you are interested to make donation... </h6>
+    <footer class="one_quarter">
+      <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+        <input type="hidden" name="cmd" value="_s-xclick">
+        <input type="hidden" name="hosted_button_id" value="ZQK682RV26CL6">
+        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+        <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+      </form>
+    </footer>
+    <!-- ################################################################################################ -->
+  </article>
+</div>
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<div class="wrapper row4 bgded overlay">
+  <footer id="footer" class="hoc clear">
+    <!-- ################################################################################################ -->
+    <div class="one_third first">
+      <h6 class="title">LINKS ARE MORE IMPORTANT THAN EVER BEFORE</h6>
+      <p>A tool that helps businesses brand, measure, and optimize their links to build the best possible customer experience.</p>
+      <ul class="faico clear">
+        <li><a class="faicon-facebook" href="#"><i class="fa fa-facebook"></i></a></li>
+        <li><a class="faicon-twitter" href="#"><i class="fa fa-twitter"></i></a></li>
+        <li><a class="faicon-dribble" href="#"><i class="fa fa-dribbble"></i></a></li>
+        <li><a class="faicon-linkedin" href="#"><i class="fa fa-linkedin"></i></a></li>
+        <li><a class="faicon-google-plus" href="#"><i class="fa fa-google-plus"></i></a></li>
+        <li><a class="faicon-vk" href="#"><i class="fa fa-vk"></i></a></li>
+      </ul>
+    </div>
+    <div class="one_third">
+      <h6 class="title">Address</h6>
+      <ul class="nospace linklist contact">
+        <li><i class="fa fa-map-marker"></i>
+          <address>
+          One Washington Sq &amp; San Jose, CA 95192
+          </address>
+        </li>
+        <li><i class="fa fa-phone"></i> 408-924-1000</li>
+        <li><i class="fa fa-fax"></i> +00 (123) 456 7890</li>
+        <li><i class="fa fa-envelope-o"></i> http://www.sjsu.edu/</li>
+      </ul>
+    </div>
+    <div class="one_third">
+      <h6 class="title">Customer's Review</h6>
+      <ul class="nospace linklist">
+        <li>
+          <article>
+            <h2 class="nospace font-x1"><a href="#home">Strongly Recommend!</a></h2>
+            <p class="nospace">S3url helps us centralize article-level analytics for all the content on our site, which gives us a clearer picture of where it's performing well and why.&hellip;</p>
+          </article>
+        </li>
+        <li>
+          <article>
+            <h2 class="nospace font-x1"><a href="#home">Essential service</a></h2>
+            <p class="nospace">S3url provides services we couldn't find anywhere else - from customized branded links to stats that let us know in real time what's working and what's not. Without question, it's one of our most valuable social media tools.&hellip;</p>
+          </article>
+        </li>
+      </ul>
+    </div>
+    <!-- ################################################################################################ -->
+  </footer>
+</div>
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<div class="wrapper row5">
+  <div id="copyright" class="hoc clear">
+    <!-- ################################################################################################ -->
+    <p class="fl_left">Copyright &copy; 2018 - All Rights Reserved - <a href="#">s3u.rl</a></p>    <!-- ############################################################################################### -->
+  </div>
+</div>
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<a id="backtotop" href="#home"><i class="fa fa-chevron-up"></i></a>
+<!-- JAVASCRIPTS -->
+<script src="layout/scripts/jquery.min.js"></script>
+<script src="layout/scripts/jquery.backtotop.js"></script>
+<script src="layout/scripts/jquery.mobilemenu.js"></script>
+<script src="layout/scripts/jquery.flexslider-min.js"></script>
+<script src="layout/scripts/scripts.js"></script>
+<script src="layout/scripts/scripts.js"></script>
+</body>
+</html>
